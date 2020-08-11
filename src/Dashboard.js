@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import LoanCost from './LoanCost.js';
 import Chart from './Chart.js';
 import { Typography } from '@material-ui/core';
+import CompoundInterest from './CompoundInterest.js';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,6 +29,19 @@ export default function FullWidthGrid() {
                     <Paper className={classes.paper} elevation={1} style={{border: '1px lightgrey solid'}}>
                         <Typography variant="h6"> Loan Cost </Typography>
                         <LoanCost />
+                    </Paper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Paper className={classes.paper} elevation={1} style={{border: '1px lightgrey solid'}}>
+                        <Typography variant="h6"> Savings Interest Calculator </Typography>
+                        <CompoundInterest />
+                    </Paper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Paper className={classes.paper} elevation={1} style={{border: '1px lightgrey solid'}}>
+                        <Typography variant="h6"> Overpayment Calculator </Typography>
+                        <Typography> Under Construction </Typography>
+                        {/* <LoanCost /> */}
                     </Paper>
                 </Grid>
             </Grid>

@@ -82,6 +82,7 @@ export default function LoanCost() {
     let dataArray = [];
     let remaining = totalCost;
 
+    //For each month calculate the remaining balance and term left. Push to dataArray
     for (let i = 0; i < loanTerm; i++) {
       let arrayItem = {};
       let termRemaining = loanTerm - i;
