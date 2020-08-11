@@ -5,7 +5,8 @@ import Button from '@material-ui/core/Button';
 import { Monthly, TotalCost, TotalInterest, CostPerYear } from './Calculations.js';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FunctionsIcon from '@material-ui/icons/Functions';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
+import Chart from './Chart.js';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,9 +23,14 @@ const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(1),
   },
+  textField: {
+    padding: '5px',
+    width: '120px'
+  }
 }));
 
 export default function LoanCost() {
+  const classes = useStyles();
   const [loanAmount, setLoanAmount] = useState(5000);
   const [aprAmount, setAprAmount] = useState(3.2);
   const [loanTerm, setLoanTerm] = useState(36);
@@ -32,6 +38,8 @@ export default function LoanCost() {
   const [totalCost, setTotalCost] = useState(0);
   const [interest, setinterest] = useState(0);
   const [costPerYear, setCostPerYear] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState([]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -61,15 +69,50 @@ export default function LoanCost() {
 
     let costPerYear = CostPerYear(monthlyCostResponse);
     setCostPerYear(costPerYear);
+
+    GetChartData(totalCostResponse, loanTerm, monthlyCostResponse);
+  }
+
+  const GetChartData = (totalCost, loanTerm, monthlyCost) => {
+    //Show a burndown of remaining cost each month over the duration of the loan
+
+    //Build an array of data.
+    // array = [termRemaining: 36, amountRemaining: 5000], [termRemaining: 35, amountRemaining: 4800]
+
+    let dataArray = [];
+    let remaining = totalCost;
+
+    for (let i = 0; i < loanTerm; i++) {
+      let arrayItem = {};
+      let termRemaining = loanTerm - i;
+      remaining -= monthlyCost;
+
+      if (i == 0) {
+        // Add base values
+        arrayItem.termRemaining = Math.trunc(loanTerm);
+        arrayItem.amountRemaining = Math.trunc(remaining); 
+      }
+      else {
+        arrayItem.termRemaining = Math.trunc(termRemaining);
+        arrayItem.amountRemaining = Math.trunc(remaining); 
+      }
+
+      dataArray.push(arrayItem);
+    }
+
+    //This data is used for the chart component
+    console.log(dataArray);
+    setChartData(dataArray);
+    setLoading(false);
   }
 
   return (
     <>
       <div style={{ padding: '5px', margin: '5px' }}>
         <Grid container spacing={1}>
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={6}>
             <TextField
-              style={{ padding: '5px' }}
+              className={classes.textField}
               id="outlined-basic"
               label="Loan Amount"
               value={loanAmount}
@@ -80,7 +123,7 @@ export default function LoanCost() {
               onChange={handleChange}
               variant="outlined" />
             <TextField
-              style={{ padding: '5px' }}
+              className={classes.textField}
               id="outlined-basic"
               label="APR (%)"
               value={aprAmount}
@@ -88,30 +131,30 @@ export default function LoanCost() {
               onChange={handleChange}
               variant="outlined" />
             <TextField
-              style={{ padding: '5px' }}
+              className={classes.textField}
               id="outlined-basic"
               label="Loan Term (months)"
               value={loanTerm}
               name="LoanTerm"
               onChange={handleChange}
               variant="outlined" />
-          </Grid>
 
-          <Grid item xs={12} md={2}>
+            <br />
+
             <Button
               onClick={handleSubmit}
               variant="contained"
               color="primary"
-              size="large"
+              size="medium"
               startIcon={<FunctionsIcon />}
             >
               Calculate
             </Button>
-          </Grid>
 
-          <Grid item xs={12} md={5}>
+            <br />
+
             <TextField
-              style={{ padding: '5px' }}
+              className={classes.textField}
               id="filled-read-only-input"
               label="Monthly Cost"
               value={monthly}
@@ -122,7 +165,7 @@ export default function LoanCost() {
             />
 
             <TextField
-              style={{ padding: '5px' }}
+              className={classes.textField}
               id="filled-read-only-input"
               label="Cost per year"
               value={costPerYear}
@@ -133,7 +176,7 @@ export default function LoanCost() {
             />
 
             <TextField
-              style={{ padding: '5px' }}
+              className={classes.textField}
               id="filled-read-only-input"
               label="Total Cost"
               value={totalCost}
@@ -144,7 +187,7 @@ export default function LoanCost() {
             />
 
             <TextField
-              style={{ padding: '5px' }}
+              className={classes.textField}
               id="filled-read-only-input"
               label="Total Interest"
               value={interest}
@@ -153,8 +196,9 @@ export default function LoanCost() {
               }}
               variant="filled"
             />
-
-
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Chart data={chartData} loading={loading} max={totalCost}/>
           </Grid>
         </Grid>
       </div>
