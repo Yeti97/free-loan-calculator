@@ -90,11 +90,11 @@ export default function LoanCost() {
       if (i == 0) {
         // Add base values
         arrayItem.termRemaining = Math.trunc(loanTerm);
-        arrayItem.amountRemaining = Math.trunc(remaining); 
+        arrayItem.amountRemaining = Math.trunc(remaining);
       }
       else {
         arrayItem.termRemaining = Math.trunc(termRemaining);
-        arrayItem.amountRemaining = Math.trunc(remaining); 
+        arrayItem.amountRemaining = Math.trunc(remaining);
       }
 
       dataArray.push(arrayItem);
@@ -198,7 +198,9 @@ export default function LoanCost() {
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <Chart data={chartData} loading={loading} max={totalCost}/>
+            <div style={{ overflowX: 'auto' }}>
+              <Chart data={chartData} loading={loading} max={totalCost} />
+            </div>
           </Grid>
         </Grid>
       </div>
