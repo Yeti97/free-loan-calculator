@@ -3,8 +3,8 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
 
-export default function Chart(props) {
-  const { data, loading, totalCost } = props;
+export default function CompoundChart(props) {
+  const { data, loading, totalCost, initial } = props;
 
   if (loading) {
     return (null);
@@ -21,11 +21,11 @@ export default function Chart(props) {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="termRemaining" />
-        <YAxis dataKey="amountRemaining" domain={[0, totalCost]} />
+        <XAxis dataKey="year" />
+        <YAxis dataKey="amount" domain={[initial, totalCost]} />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="amountRemaining" stroke="#8884d8" activeDot={{ r: 8 }} />
+        <Line type="monotone" dataKey="amount" stroke="#8884d8" activeDot={{ r: 8 }} />
       </LineChart>
     )
   }

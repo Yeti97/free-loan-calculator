@@ -6,7 +6,7 @@ import { Monthly, TotalCost, TotalInterest, CostPerYear } from './Calculations.j
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FunctionsIcon from '@material-ui/icons/Functions';
 import { Grid, Typography } from '@material-ui/core';
-import Chart from './Chart.js';
+import LoanRepaymentChart from './LoanRepaymentChart.js';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -200,7 +200,7 @@ export default function LoanCost() {
           </Grid>
           <Grid item xs={12} md={6}>
             <div style={{ overflowX: 'auto' }}>
-              <Chart data={chartData} loading={loading} max={totalCost} />
+              <LoanRepaymentChart data={chartData} loading={loading} max={totalCost} />
             </div>
           </Grid>
         </Grid>

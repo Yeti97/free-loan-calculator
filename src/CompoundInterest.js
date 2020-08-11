@@ -5,8 +5,10 @@ import Button from '@material-ui/core/Button';
 import { Monthly, TotalCost, TotalInterest, CostPerYear } from './Calculations.js';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FunctionsIcon from '@material-ui/icons/Functions';
-import { Grid, Typography } from '@material-ui/core';
-import Chart from './Chart.js';
+import { Grid, Typography, Table } from '@material-ui/core';
+import Chart from './LoanRepaymentChart.js';
+import CompoundChart from './CompoundChart.js';
+import CompoundTable from './CompoundTable.js';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,7 +38,7 @@ export default function CompoundInterest() {
   const [monthly, setMonthly] = useState(0);
   const [term, setTerm] = useState(5);
   const [monthlyPayment, setMonthlyPayment] = useState(0);
-  const [totalCost, setTotalCost] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [interest, setinterest] = useState(0);
   const [costPerYear, setCostPerYear] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -45,6 +47,9 @@ export default function CompoundInterest() {
   const handleChange = (event) => {
     const { name, value } = event.target;
 
+    if (name === "initialAmount") {
+      setInitialAmount(value);
+    }
     if (name === "term") {
       setTerm(value);
     }
@@ -90,7 +95,7 @@ export default function CompoundInterest() {
 
       //Get the latest amount
       let total = parseInt(initial) + parseInt(monthlyPayment);
-  
+
       //Work out the APR
       let princ = initialAmount;
       let intr = apr / 1200;
@@ -105,16 +110,20 @@ export default function CompoundInterest() {
       //Build our object to return
       dataItem.amount = total;
       dataItem.interest = monthInterest.toFixed(2);
-      dataItem.totalInterest = totalInterest.toFixed(2); 
+      dataItem.totalInterest = totalInterest.toFixed(2);
       dataItem.totalPayments = totalPayments;
       dataArray.push(dataItem);
     }
 
     console.log(monthlyPayment);
     console.log(dataArray);
+
+    setTotalAmount(initial);
+    setChartData(dataArray);
+    setLoading(false);
   }
 
-  
+
   return (
     <>
       <div style={{ padding: '5px', margin: '5px' }}>
@@ -172,8 +181,13 @@ export default function CompoundInterest() {
           </Grid>
           <Grid item xs={12} md={6}>
             <div style={{ overflowX: 'auto' }}>
-              <Chart data={chartData} loading={loading} max={totalCost} />
+              <CompoundChart data={chartData.filter(x => x.month == 12).sort((a, b) => a < b)} loading={loading} max={totalAmount} />
             </div>
+          </Grid>
+        </Grid>
+        <Grid container>
+          <Grid item xs={12}>
+            <CompoundTable data={chartData.filter(x => x.month == 12).sort((a, b) => a < b)} loading={loading} initial={initialAmount} />
           </Grid>
         </Grid>
       </div>

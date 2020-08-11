@@ -4,7 +4,6 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import LoanCost from './LoanCost.js';
-import Chart from './Chart.js';
 import { Typography } from '@material-ui/core';
 import CompoundInterest from './CompoundInterest.js';
 
