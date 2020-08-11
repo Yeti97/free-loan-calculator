@@ -8,8 +8,8 @@ function App() {
   return (
     <div className="App">
       <header>
-        <Typography style={{padding:"5px"}}>
-          Loan Repayment Calculator
+        <Typography variant="h4" style={{padding:"5px"}}>
+          Free Loan Calculators
         </Typography>
       </header>
       <body>

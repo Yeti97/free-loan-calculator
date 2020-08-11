@@ -3,8 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Form from './Form.js';
+import LoanCost from './LoanCost.js';
 import Chart from './Chart.js';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -12,7 +13,7 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(2),
     },
     paper: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
         color: theme.palette.text.secondary,
     },
 }));
@@ -24,15 +25,11 @@ export default function FullWidthGrid() {
         <div className={classes.root}>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
-                    <Paper className={classes.paper}>
-                        <Form />
+                    <Paper className={classes.paper} elevation={1} style={{border: '1px lightgrey solid'}}>
+                        <Typography variant="h6"> Loan Cost </Typography>
+                        <LoanCost />
                     </Paper>
                 </Grid>
-                {/* <Grid item xs={12}>
-                    <Paper className={classes.paper}>
-                        <Chart />
-                    </Paper>
-                </Grid> */}
             </Grid>
         </div>
     );
