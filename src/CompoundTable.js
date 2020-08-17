@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
     table: {
-        minWidth: 650,
+        minWidth: 400,
     },
 });
 
@@ -18,7 +18,7 @@ export default function CompoundTable(props) {
     else {
         return (
             <TableContainer component={Paper} style={{ maxHeight: '400px' }}>
-                <Table stickyHeader className={classes.table} aria-label="simple table">
+                <Table stickyHeader size="small" className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow>
                             <TableCell align="right">Total</TableCell>
