@@ -21,9 +21,9 @@ export default function CompoundChart(props) {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="year" />
-        <YAxis dataKey="amount" domain={[initial, totalCost]} />
-        <Tooltip />
+        <XAxis dataKey="year" label="Year"/>
+        <YAxis dataKey="amount" label="Total" domain={[initial, totalCost]} />
+        <Tooltip label="Year"/>
         <Legend />
         <Line type="monotone" dataKey="amount" stroke="#8884d8" activeDot={{ r: 8 }} />
       </LineChart>
