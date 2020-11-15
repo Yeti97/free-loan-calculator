@@ -24,7 +24,7 @@ export default function OverpaymentChart(props) {
         <YAxis dataKey="initialAmount" label="Total" />
         <Tooltip label="Year" />
         <Legend />
-        <Line type="monotone" dataKey="totalWithOver" stroke="#8884d8" activeDot={{ r: 8 }} />
+        <Line type="monotone" dataKey="totalWithOver" stroke="#DA33FF" activeDot={{ r: 8 }} />
         <Line type="monotone" dataKey="amount" stroke="#8884d8" activeDot={{ r: 8 }} />
       </LineChart>
     )
