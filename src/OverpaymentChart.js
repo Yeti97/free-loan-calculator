@@ -3,7 +3,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
 
-export default function CompoundChart(props) {
+export default function OverpaymentChart(props) {
   const { data, loading, totalCost, initial } = props;
 
   if (loading) {
@@ -20,10 +20,11 @@ export default function CompoundChart(props) {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="year" label="Year"/>
-        <YAxis dataKey="amount" label="Total" domain={[initial, totalCost]} />
-        <Tooltip label="Year"/>
+        <XAxis dataKey="year" label="Year" />
+        <YAxis dataKey="initialAmount" label="Total" />
+        <Tooltip label="Year" />
         <Legend />
+        <Line type="monotone" dataKey="totalWithOver" stroke="#8884d8" activeDot={{ r: 8 }} />
         <Line type="monotone" dataKey="amount" stroke="#8884d8" activeDot={{ r: 8 }} />
       </LineChart>
     )

@@ -88,7 +88,7 @@ export default function LoanCost() {
       let termRemaining = loanTerm - i;
       remaining -= monthlyCost;
 
-      if (i == 0) {
+      if (i === 0) {
         // Add base values
         arrayItem.termRemaining = Math.trunc(loanTerm);
         arrayItem.amountRemaining = Math.trunc(remaining);
@@ -102,7 +102,6 @@ export default function LoanCost() {
     }
 
     //This data is used for the chart component
-    console.log(dataArray);
     setChartData(dataArray);
     setLoading(false);
   }

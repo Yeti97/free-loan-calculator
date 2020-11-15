@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import LoanCost from './LoanCost.js';
 import { Typography } from '@material-ui/core';
 import CompoundInterest from './CompoundInterest.js';
+import Overpayment from './Overpayment.js'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -25,22 +26,21 @@ export default function FullWidthGrid() {
         <div className={classes.root}>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
-                    <Paper className={classes.paper} elevation={1} style={{border: '1px lightgrey solid'}}>
+                    <Paper className={classes.paper} elevation={1} style={{ border: '1px lightgrey solid' }}>
+                        <Typography variant="h6"> Overpayment Calculator </Typography>
+                        <Overpayment />
+                    </Paper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Paper className={classes.paper} elevation={1} style={{ border: '1px lightgrey solid' }}>
                         <Typography variant="h6"> Loan Cost </Typography>
                         <LoanCost />
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Paper className={classes.paper} elevation={1} style={{border: '1px lightgrey solid'}}>
+                    <Paper className={classes.paper} elevation={1} style={{ border: '1px lightgrey solid' }}>
                         <Typography variant="h6"> Savings Interest Calculator </Typography>
                         <CompoundInterest />
-                    </Paper>
-                </Grid>
-                <Grid item xs={12}>
-                    <Paper className={classes.paper} elevation={1} style={{border: '1px lightgrey solid'}}>
-                        <Typography variant="h6"> Overpayment Calculator </Typography>
-                        <Typography> Under Construction </Typography>
-                        {/* <LoanCost /> */}
                     </Paper>
                 </Grid>
             </Grid>

@@ -10,7 +10,6 @@ export default function LoanRepaymentChart(props) {
     return (null);
   }
   else {
-    console.log(data, loading);
     return (
       <LineChart
         width={500}

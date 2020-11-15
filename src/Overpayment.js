@@ -8,7 +8,8 @@ import FunctionsIcon from '@material-ui/icons/Functions';
 import { Grid, Typography, Table } from '@material-ui/core';
 import Chart from './LoanRepaymentChart.js';
 import CompoundChart from './CompoundChart.js';
-import CompoundTable from './CompoundTable.js';
+import OverpaymentTable from './OverpaymentTable.js';
+import OverpaymentChart from './OverpaymentChart.js';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,18 +32,23 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CompoundInterest() {
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+export default function Overpayment() {
   const classes = useStyles();
-  const [initialAmount, setInitialAmount] = useState(5000);
-  const [aprAmount, setAprAmount] = useState(3.2);
+  const [initialAmount, setInitialAmount] = useState(250000);
+  const [aprAmount, setAprAmount] = useState(2);
   const [monthly, setMonthly] = useState(0);
-  const [term, setTerm] = useState(5);
-  const [monthlyPayment, setMonthlyPayment] = useState(0);
+  const [term, setTerm] = useState(25);
+  const [monthlyPayment, setMonthlyPayment] = useState(1060);
   const [totalAmount, setTotalAmount] = useState(0);
   const [interest, setinterest] = useState(0);
   const [costPerYear, setCostPerYear] = useState(0);
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState([]);
+  const [yearlyPercent, setYearlyPercent] = useState(10);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -59,6 +65,9 @@ export default function CompoundInterest() {
     if (name === "monthlyPayment") {
       setMonthlyPayment(value);
     }
+    if (name === "yearlyPercent") {
+      setYearlyPercent(value);
+    }
   }
 
   const handleSubmit = () => {
@@ -70,6 +79,9 @@ export default function CompoundInterest() {
     let years = term;
     let apr = aprAmount;
     let initial = initialAmount;
+    let intitialOver = initialAmount;
+    let maxOverpayment = 0;
+    let yearly = yearlyPercent;
     let months = years * 12;
     let totalInterest = 0;
     let totalPayments = 0;
@@ -93,33 +105,48 @@ export default function CompoundInterest() {
         monthCounter++;
       }
 
-      //Get the latest amount
-      let total = parseInt(initial) + parseInt(monthlyPayment);
-
       //Work out the APR
-      let princ = initialAmount;
       let intr = apr / 1200;
       let monthInterest = parseInt(initial) * intr;
+      let monthInterestOver = parseInt(intitialOver) * intr;
+
+      //Work out the max % for this month
+      let monthlyInt = yearlyPercent / 1200;
+      let overpaymentInt = parseInt(intitialOver) * monthlyInt;
 
       //Add the APR to our amount
-      initial = parseInt(initial) + parseInt(monthlyPayment) + monthInterest;
+      initial = (parseInt(initial) - parseInt(monthlyPayment)) + monthInterest;
+      intitialOver = (parseInt(intitialOver) - parseInt(monthlyPayment) - overpaymentInt) + monthInterestOver;
 
       totalInterest += monthInterest;
       totalPayments += parseInt(monthlyPayment);
 
-      //Build our object to return
-      dataItem.amount = total;
-      dataItem.interest = monthInterest.toFixed(2);
-      dataItem.totalInterest = totalInterest.toFixed(2);
-      dataItem.totalPayments = totalPayments;
+      if (intitialOver >= 0) {
+        //Build our object to return
+        dataItem.initialAmount = initialAmount.toFixed(2);
+        dataItem.amount = initial.toFixed(0);
+        dataItem.interest = monthInterest.toFixed(2);
+        dataItem.totalInterest = totalInterest.toFixed(2);
+        dataItem.totalPayments = totalPayments.toFixed(0);
+        dataItem.totalWithOver = intitialOver.toFixed(0);
+        dataItem.overPayment = ((parseInt(intitialOver) * 0.1) / 12).toFixed(2);
+      }
+      else {
+        //Build our object to return
+        dataItem.initialAmount = initialAmount.toFixed(2);
+        dataItem.amount = initial.toFixed(0);
+        dataItem.interest = monthInterest.toFixed(2);
+        dataItem.totalInterest = totalInterest.toFixed(2);
+        dataItem.totalPayments = totalPayments.toFixed(0);
+      }
+
       dataArray.push(dataItem);
     }
 
-    setTotalAmount(initial);
+    setTotalAmount(intitialOver);
     setChartData(dataArray);
     setLoading(false);
   }
-
 
   return (
     <>
@@ -129,7 +156,7 @@ export default function CompoundInterest() {
             <TextField
               className={classes.textField}
               id="outlined-basic"
-              label="Initial Amount"
+              label="Mortgage Amount"
               name="initialAmount"
               value={initialAmount}
               InputProps={{
@@ -148,7 +175,7 @@ export default function CompoundInterest() {
             <TextField
               className={classes.textField}
               id="outlined-basic"
-              label="Saving Term (years)"
+              label="Term (years)"
               value={term}
               name="term"
               onChange={handleChange}
@@ -159,6 +186,14 @@ export default function CompoundInterest() {
               label="Monthly Payment"
               value={monthlyPayment}
               name="monthlyPayment"
+              onChange={handleChange}
+              variant="outlined" />
+            <TextField
+              className={classes.textField}
+              id="outlined-basic"
+              label="Yearly %"
+              value={yearlyPercent}
+              name="yearlyPercent"
               onChange={handleChange}
               variant="outlined" />
 
@@ -174,17 +209,16 @@ export default function CompoundInterest() {
               Calculate
             </Button>
 
-            <Typography variant="subtitle2"> * interest is calculated monthly </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
             <div style={{ overflowX: 'auto' }}>
-              <CompoundChart data={chartData.filter(x => x.month == 12).sort((a, b) => a < b)} loading={loading} max={totalAmount} />
+              <OverpaymentChart data={chartData.filter(x => x.month == 12).sort((a, b) => a < b)} loading={loading} max={totalAmount} initial={initialAmount} />
             </div>
           </Grid>
         </Grid>
         <Grid container>
           <Grid item xs={12}>
-            <CompoundTable data={chartData.filter(x => x.month == 12).sort((a, b) => a < b)} loading={loading} initial={initialAmount} />
+            <OverpaymentTable data={chartData.filter(x => x.month == 12).sort((a, b) => a < b)} loading={loading} initial={initialAmount} />
           </Grid>
         </Grid>
       </div>
