@@ -50,38 +50,18 @@ export default function Overpayment() {
   const [chartData, setChartData] = useState([]);
   const [yearlyPercent, setYearlyPercent] = useState(10);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-
-    if (name === "initialAmount") {
-      setInitialAmount(value);
-    }
-    if (name === "term") {
-      setTerm(value);
-    }
-    if (name === "aprAmount") {
-      setAprAmount(value);
-    }
-    if (name === "monthlyPayment") {
-      setMonthlyPayment(value);
-    }
-    if (name === "yearlyPercent") {
-      setYearlyPercent(value);
-    }
-  }
-
   const handleSubmit = () => {
     //Build the chart data to return
     //DATA = [Year 0, amount: 5000, interest: 50],[Year 1, amount: 7000, interest: 70],[Year 2, amount: 9000, interest: 100]
     //Return the year, amount and interest in the savings. Can also be used for a table view. 
 
     //Get the values we need to calculate
-    let years = term;
-    let apr = aprAmount;
-    let initial = initialAmount;
-    let intitialOver = initialAmount;
+    let years = parseInt(term);
+    let apr = parseFloat(aprAmount);
+    let initial = parseInt(initialAmount);
+    let intitialOver = parseInt(initialAmount);
     let maxOverpayment = 0;
-    let yearly = yearlyPercent;
+    let yearly = parseFloat(yearlyPercent);
     let months = years * 12;
     let totalInterest = 0;
     let totalPayments = 0;
@@ -90,7 +70,7 @@ export default function Overpayment() {
     let yearCounter = 1;
 
     //For each month calculate the interest and monthly payments.
-    for (let i = 1; i < months; i++) {
+    for (let i = 1; i <= months; i++) {
       //Get the current amount + monthly payment + Yearly APR / 12
 
       //Return
@@ -98,6 +78,7 @@ export default function Overpayment() {
       dataItem.year = yearCounter;
       dataItem.month = monthCounter;
 
+      //Work out when the year changes
       if (monthCounter == 12) {
         yearCounter++;
         monthCounter = 1;
@@ -123,25 +104,26 @@ export default function Overpayment() {
 
       if (intitialOver >= 0) {
         //Build our object to return
-        dataItem.initialAmount = initialAmount.toFixed(2);
+        dataItem.initialAmount = parseInt(initialAmount).toFixed(0);
         dataItem.amount = initial.toFixed(0);
-        dataItem.interest = monthInterest.toFixed(2);
-        dataItem.totalInterest = totalInterest.toFixed(2);
+        dataItem.interest = monthInterest.toFixed(0);
+        dataItem.totalInterest = totalInterest.toFixed(0);
         dataItem.totalPayments = totalPayments.toFixed(0);
         dataItem.totalWithOver = intitialOver.toFixed(0);
-        dataItem.overPayment = ((parseInt(intitialOver) * 0.1) / 12).toFixed(2);
+        dataItem.overPayment = ((parseInt(intitialOver) * 0.1) / 12).toFixed(0);
       }
       else {
         //Build our object to return
-        dataItem.initialAmount = initialAmount.toFixed(2);
+        dataItem.initialAmount = parseInt(initialAmount).toFixed(0);
         dataItem.amount = initial.toFixed(0);
-        dataItem.interest = monthInterest.toFixed(2);
-        dataItem.totalInterest = totalInterest.toFixed(2);
+        dataItem.interest = monthInterest.toFixed(0);
+        dataItem.totalInterest = totalInterest.toFixed(0);
         dataItem.totalPayments = totalPayments.toFixed(0);
       }
 
       dataArray.push(dataItem);
     }
+
 
     setTotalAmount(intitialOver);
     setChartData(dataArray);
@@ -162,7 +144,7 @@ export default function Overpayment() {
               InputProps={{
                 startAdornment: <InputAdornment position="start">£</InputAdornment>,
               }}
-              onChange={handleChange}
+              onChange={e => setInitialAmount(e.target.value)}
               variant="outlined" />
             <TextField
               className={classes.textField}
@@ -170,7 +152,7 @@ export default function Overpayment() {
               label="APR (%)"
               value={aprAmount}
               name="aprAmount"
-              onChange={handleChange}
+              onChange={e => setAprAmount(e.target.value)}
               variant="outlined" />
             <TextField
               className={classes.textField}
@@ -178,7 +160,7 @@ export default function Overpayment() {
               label="Term (years)"
               value={term}
               name="term"
-              onChange={handleChange}
+              onChange={e => setTerm(e.target.value)}
               variant="outlined" />
             <TextField
               className={classes.textField}
@@ -186,7 +168,7 @@ export default function Overpayment() {
               label="Monthly Payment"
               value={monthlyPayment}
               name="monthlyPayment"
-              onChange={handleChange}
+              onChange={e => setMonthlyPayment(e.target.value)}
               variant="outlined" />
             <TextField
               className={classes.textField}
@@ -194,7 +176,7 @@ export default function Overpayment() {
               label="Yearly %"
               value={yearlyPercent}
               name="yearlyPercent"
-              onChange={handleChange}
+              onChange={e => setYearlyPercent(e.target.value)}
               variant="outlined" />
 
             <br />

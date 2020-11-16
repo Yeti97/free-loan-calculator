@@ -1,16 +1,13 @@
 import React from 'react'
 import { TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
+import numberWithCommas from './Helpers/numberWithCommas.js';
 
 const useStyles = makeStyles({
     table: {
         minWidth: 400,
     },
 });
-
-function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
 
 export default function OverpaymentTable(props) {
     const classes = useStyles();
@@ -34,10 +31,10 @@ export default function OverpaymentTable(props) {
                     <TableBody>
                         {data.map((row) => (
                             <TableRow key={row.name}>
-                                <TableCell align="right">£{row.totalWithOver}</TableCell>
-                                <TableCell align="right">£{row.amount}</TableCell>
-                                <TableCell align="right">£{row.overPayment}</TableCell>
-                                <TableCell align="right">{row.year}</TableCell>
+                                {row.totalWithOver ? <TableCell align="right">£{numberWithCommas(row.totalWithOver)}</TableCell> : <TableCell align="right"></TableCell>}
+                                {row.amount ? <TableCell align="right">£{numberWithCommas(row.amount)}</TableCell> : <TableCell align="right"></TableCell>}
+                                {row.overPayment ? <TableCell align="right">£{numberWithCommas(row.overPayment)}</TableCell> : <TableCell align="right"></TableCell>}
+                                {row.year ? <TableCell align="right">{numberWithCommas(row.year)}</TableCell> : <TableCell align="right"></TableCell>}
                             </TableRow>
                         ))}
                     </TableBody>

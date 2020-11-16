@@ -20,8 +20,8 @@ export default function OverpaymentChart(props) {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="year" label="Year" />
-        <YAxis dataKey="initialAmount" label="Total" />
+        <XAxis dataKey="year"/>
+        <YAxis dataKey="initialAmount"/>
         <Tooltip label="Year" />
         <Legend />
         <Line type="monotone" dataKey="totalWithOver" stroke="#DA33FF" activeDot={{ r: 8 }} />

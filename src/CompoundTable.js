@@ -1,6 +1,7 @@
 import React from 'react'
 import { TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
+import numberWithCommas from './Helpers/numberWithCommas.js';
 
 const useStyles = makeStyles({
     table: {
@@ -30,10 +31,10 @@ export default function CompoundTable(props) {
                     <TableBody>
                         {data.map((row) => (
                             <TableRow key={row.name}>
-                                <TableCell align="right">£{row.amount}</TableCell>
-                                <TableCell align="right">£{row.totalInterest}</TableCell>
-                                <TableCell align="right">£{row.totalPayments}</TableCell>
-                                <TableCell align="right">{row.year}</TableCell>
+                                <TableCell align="right">£{numberWithCommas(row.amount)}</TableCell>
+                                <TableCell align="right">£{numberWithCommas(row.totalInterest)}</TableCell>
+                                <TableCell align="right">£{numberWithCommas(row.totalPayments)}</TableCell>
+                                <TableCell align="right">{numberWithCommas(row.year)}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
