@@ -49,11 +49,13 @@ export default function Overpayment() {
   const [loading, setLoading] = useState(true);
   const [chartData, setChartData] = useState([]);
   const [yearlyPercent, setYearlyPercent] = useState(10);
+  const [submitted, setSubmmited] = useState(false);
 
   const handleSubmit = () => {
     //Build the chart data to return
     //DATA = [Year 0, amount: 5000, interest: 50],[Year 1, amount: 7000, interest: 70],[Year 2, amount: 9000, interest: 100]
     //Return the year, amount and interest in the savings. Can also be used for a table view. 
+    setSubmmited(true);
 
     //Get the values we need to calculate
     let years = parseInt(term);
@@ -110,7 +112,7 @@ export default function Overpayment() {
         dataItem.totalInterest = totalInterest.toFixed(0);
         dataItem.totalPayments = totalPayments.toFixed(0);
         dataItem.totalWithOver = intitialOver.toFixed(0);
-        dataItem.overPayment = ((parseInt(intitialOver) * 0.1) / 12).toFixed(0);
+        dataItem.overPayment = (overpaymentInt).toFixed(0);
       }
       else {
         //Build our object to return
@@ -192,17 +194,28 @@ export default function Overpayment() {
             </Button>
 
           </Grid>
-          <Grid item xs={12} md={6}>
-            <div style={{ overflowX: 'auto' }}>
-              <OverpaymentChart data={chartData.filter(x => x.month == 12).sort((a, b) => a < b)} loading={loading} max={totalAmount} initial={initialAmount} />
-            </div>
-          </Grid>
+          {submitted ?
+            <>
+              <Grid item xs={12} md={6}>
+                <div style={{ overflowX: 'auto' }}>
+                  <OverpaymentChart data={chartData.filter(x => x.month == 12).sort((a, b) => a < b)} loading={loading} max={totalAmount} initial={initialAmount} />
+                </div>
+              </Grid>
+            </>
+            : <Typography> Using your mortgage details, you can calculate the quickest time to repay. For this you need to know your APR, Monthly Payments, maximum overpayment percent and your remaining term. </Typography>
+          }
         </Grid>
-        <Grid container>
-          <Grid item xs={12}>
-            <OverpaymentTable data={chartData.filter(x => x.month == 12).sort((a, b) => a < b)} loading={loading} initial={initialAmount} />
-          </Grid>
-        </Grid>
+        {submitted ?
+          <>
+            <Grid container>
+              <Grid item xs={12}>
+                <OverpaymentTable data={chartData.filter(x => x.month == 12).sort((a, b) => a < b)} loading={loading} initial={initialAmount} />
+              </Grid>
+            </Grid>
+          </>
+          : null
+        }
+
       </div>
     </>
   );
